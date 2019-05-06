@@ -5,6 +5,8 @@ package org.fogbeam.example.opennlp;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
@@ -22,6 +24,7 @@ public class TokenizerMain
 		
 		// the model we trained
 		InputStream modelIn = new FileInputStream( "models/en-token.model" );
+		String filePath = "eval_data/en-sent.eval";
 		
 		try
 		{
@@ -29,11 +32,14 @@ public class TokenizerMain
 		
 			Tokenizer tokenizer = new TokenizerME(model);
 			
-				/* note what happens with the "three depending on which model you use */
-			String[] tokens = tokenizer.tokenize
-					(  "A ranger journeying with Oglethorpe, founder of the Georgia Colony, " 
-							+ " mentions \"three Mounts raised by the Indians over three of their Great Kings" 
-							+ " who were killed in the Wars.\"" );
+			/* note what happens with the "three depending on which model you use */			
+			String[] tokens = tokenizer.tokenize(new String(Files.readAllBytes(Paths.get(filePath))));
+			
+			if (tokens.length == 0)
+				tokens = tokenizer.tokenize
+				(  "A ranger journeying with Oglethorpe, founder of the Georgia Colony, " 
+						+ " mentions \"three Mounts raised by the Indians over three of their Great Kings" 
+						+ " who were killed in the Wars.\"" );
 			
 			for( String token : tokens )
 			{
